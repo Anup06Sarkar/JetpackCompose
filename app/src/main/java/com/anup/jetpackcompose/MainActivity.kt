@@ -30,43 +30,31 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val color = remember {//remember helps to hold the previous state. Its like stateful in flutter
-                mutableStateOf(Color.Yellow)
-            }
 
             Column {
-                ColorBox(modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f)){
-                    color.value = it
-                }
+                ColorBox(modifier = Modifier.fillMaxSize().weight(1f))
 
-                Box(modifier = Modifier
-                    .background(color.value)
-                    .weight(1f)
-                    .fillMaxSize())
+                ColorBox(modifier = Modifier.fillMaxSize().weight(1f))
             }
         }
     }
 }
 
 @Composable
-fun ColorBox(modifier: Modifier = Modifier
-             ,updateColor: (Color) -> Unit){
-
+fun ColorBox(modifier: Modifier = Modifier){
+    val color = remember {//remember helps to hold the previous state. Its like stateful in flutter
+        mutableStateOf(Color.Yellow)
+    }
     Box(modifier = modifier
-        .background(Color.Red)
+        .background(color.value)
         .clickable {
-            updateColor(
-                Color(
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    Random.nextFloat(),
-                    1f
-                )
+            color.value = Color(
+                Random.nextFloat(),
+                Random.nextFloat(),
+                Random.nextFloat(),
+                1f
             )
-        }
-    )
+        })
 }
 
 
