@@ -5,12 +5,15 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -21,60 +24,52 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val painter = painterResource(id = R.drawable.shinchan)
-            val title = "Shinchan"
-            val description="Shinchan bhaiya ki yoooy oyoyoy!"
-            Box(modifier = Modifier
-                .fillMaxWidth(.5f)
-                .padding(16.dp)){
-                ImageCard(painter = painter, contentDescriptor = description, title = title)
+            val color = remember {//remember helps to hold the previous state. Its like stateful in flutter
+                mutableStateOf(Color.Yellow)
+            }
+
+            Column {
+                ColorBox(modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f)){
+                    color.value = it
+                }
+
+                Box(modifier = Modifier
+                    .background(color.value)
+                    .weight(1f)
+                    .fillMaxSize())
             }
         }
     }
 }
 
 @Composable
-fun ImageCard(
-    painter: Painter,
-    contentDescriptor: String,
-    title: String,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(15.dp)
-    ) {
-        Box(modifier = Modifier.height(200.dp)){
-            Image(painter = painter,
-                contentDescription = contentDescriptor,
-            contentScale = ContentScale.Crop)
+fun ColorBox(modifier: Modifier = Modifier
+             ,updateColor: (Color) -> Unit){
 
-            Box(modifier = Modifier.fillMaxSize()
-                .background(Brush.verticalGradient(
-                    colors = listOf(
-                        Color.Transparent,
-                        Color.Black
-                    ),
-                    startY = 350f
-                )))
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            contentAlignment = Alignment.BottomStart){
-                Text(text = contentDescriptor, style = TextStyle(
-                    color = Color.White,
-                    fontSize = 16.sp
-                ))
-            }
-
+    Box(modifier = modifier
+        .background(Color.Red)
+        .clickable {
+            updateColor(
+                Color(
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    Random.nextFloat(),
+                    1f
+                )
+            )
         }
-    }
+    )
 }
+
+
 
 
 
